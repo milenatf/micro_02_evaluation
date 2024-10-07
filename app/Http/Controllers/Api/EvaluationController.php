@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateEvaluation;
 use App\Http\Resources\EvaluationResource;
 use App\Models\Evaluation;
+use App\Services\CompanyService;
 use Illuminate\Http\Request;
 
 class EvaluationController extends Controller
 {
-    public function __construct(protected Evaluation $repository)
+    public function __construct(protected Evaluation $repository, protected CompanyService $companyService)
     {
-        
+
     }
     /**
      * Display a listing of the resource.
@@ -31,8 +32,18 @@ class EvaluationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUpdateEvaluation $request)
+    public function store(StoreUpdateEvaluation $request, string $company_uuid)
     {
+        $response = $this->companyService->getCompany($company_uuid);
+
+        $status = $response->status();
+
+        if($status != 200) {
+            return response()->json([
+                'message' => 'Invalid Company'
+            ], $status);
+        }
+
         try {
             $this->repository->create($request->validated());
 

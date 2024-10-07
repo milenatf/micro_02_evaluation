@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Services\Traits\ConsumeExternalService;
+use App\Services\Traits\ConsumerExternalService;
 
 class CompanyService
 {
-    use ConsumeExternalService;
+    use ConsumerExternalService;
 
     protected string $token, $url;
     // Entrada para comunicação com o micro01
@@ -18,8 +18,6 @@ class CompanyService
 
     public function getCompany(string $company)
     {
-        $response = $this->request('get', "/companies/{$company}");
-
-        dd($response->body());
+        return $this->request('get', "companies/{$company}");
     }
 }
