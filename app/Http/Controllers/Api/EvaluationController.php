@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateEvaluation;
 use App\Http\Resources\EvaluationResource;
+use App\Jobs\EvaluationCreatedJob;
 use App\Models\Evaluation;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ class EvaluationController extends Controller
      */
     public function store(StoreUpdateEvaluation $request, string $company_uuid)
     {
+        // dd($company_uuid);
         $response = $this->companyService->getCompany($company_uuid);
 
         $status = $response->status();
@@ -44,8 +46,12 @@ class EvaluationController extends Controller
             ], $status);
         }
 
+        $companyEmail = json_decode($response->body())->data->email;
+
         try {
             $this->repository->create($request->validated());
+
+            EvaluationCreatedJob::dispatch($companyEmail)->onQueue('queue_email');
 
             return response()->json(['status' => 'success', 'message' => 'Avalição cadastrada com sucesso'], 201);
         } catch(\Exception $e) {
