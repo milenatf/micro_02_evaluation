@@ -18,9 +18,9 @@ class EvaluationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $company)
+    public function index(string $company)
     {
-        $evaluations = $this->repository->get();
+        $evaluations = $this->repository->where('company', $company)->get();
 
         if(!$evaluations) return response()->json('Not found', 404);
 

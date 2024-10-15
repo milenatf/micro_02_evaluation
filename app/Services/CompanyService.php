@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Services\Traits\ConsumerExternalService;
+use Milenatf\MicroservicesCommon\Services\Traits\ConsumerExternalService;
 
 class CompanyService
 {

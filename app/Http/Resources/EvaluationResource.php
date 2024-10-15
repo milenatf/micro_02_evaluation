@@ -15,10 +15,11 @@ class EvaluationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // dd($this);
         return [
-            'company' => $this->title,
-            'comment' => $this->url,
-            'stars' => $this->description,
+            'company' => $this->company,
+            'comment' => $this->comment,
+            'stars' => $this->stars,
             'created_at' => Carbon::make($this->created_at)->format('d/m/Y')
         ];
     }
